@@ -390,7 +390,7 @@ void menu(int screen, int& cells_x, int& cells_y, int& mines) {
 		cout << "\n\n";
 
 		cout << "\033[" << ((window_x / 2) - 9) << "G";
-		cout << "Minesweeper" << VERSION;
+		cout << "Minesweeper " << VERSION;
 		cout << "\n";
 		cout << "\033[" << ((window_x / 2) - 6) << "G";
 		cout << "Made by CR24";
