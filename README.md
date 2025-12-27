@@ -26,7 +26,7 @@ to show this message, use the `-h` or `--help` option.
 
 ## Compilation (via MSVC)
 ```bash
-git clone https://github.com/blurrycmd/minesweeper
+git clone https://github.com/ItsCR24/minesweeper
 cd minesweeper
 cl minesweeper.cpp /EHsc
 ```
