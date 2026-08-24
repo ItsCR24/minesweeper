@@ -8,7 +8,7 @@
 
 // THIS PROGRAM ONLY HAS SUPPORT FOR WINDOWS MACHINES, SORRY
 
-#define VERSION "v1.5.0"
+#define VERSION "v1.6"
 
 #include <iostream>
 #include <time.h> // For time()
