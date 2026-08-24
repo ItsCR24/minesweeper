@@ -13,9 +13,16 @@
 #include <iostream>
 #include <time.h> // For time()
 #include <chrono> // For clock
+#include <iomanip> // For printing float values formatted
+
+#ifdef _WIN32
 #include <Windows.h> // For getWindowSize() && updateScreen();
 #include <conio.h> // For keyboard controls (windows only)
-#include <iomanip> // For printing float values formatted
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
 
 using namespace std;
 
@@ -157,7 +164,43 @@ void saveSettings() {
 
 	FILE* settings;
 
-	if (fopen_s(&settings, "settings.txt", "w") != 0) {
+	char path[1024];
+
+#ifdef _WIN32
+	char* buf = nullptr;
+	size_t size = 0;
+
+	if (_dupenv_s(&buf, &size, "LOCALAPPDATA") == 0 && buf != nullptr) {
+		sprintf_s(path, "%s\\CR24", buf);
+		_mkdir(path);
+
+		sprintf_s(path, "%s\\CR24\\Minesweeper", buf);
+		_mkdir(path);
+
+		sprintf_s(path, "%s\\CR24\\Minesweeper\\settings.txt", buf);
+		free(buf);
+	}
+	else {
+		sprintf_s(path, "settings.txt");
+	}
+#else
+	const char* home = std::getenv("HOME");
+
+	if (home) {
+		sprintf_s(path, "%s/.config", home);
+		mkdir(path, 0755);
+
+		sprintf_s(path, "%s/.config/Minesweeper", home);
+		mkdir(path, 0755);
+
+		sprintf_s(path, "%s/.config/Minesweeper/settings.txt", home);
+	}
+	else {
+		sprintf_s(path, "settings.txt");
+	}
+#endif
+
+	if (fopen_s(&settings, path, "w") != 0) {
 		cerr << "Error: An error occurred when writing to file 'settings.txt'\n";
 		system("pause");
 		return;
@@ -174,43 +217,93 @@ void saveSettings() {
 
 
 void loadSettings() {
-
 	FILE* settings;
 
-	// Default values when starting the program for the first time
-	if (fopen_s(&settings, "settings.txt", "r") != NULL) {
-		cout << "Settings file doesn't exist, setting everything to default.\n";
-		system("pause");
+	char path[1024];
 
-		if ((fopen_s(&settings, "settings.txt", "w")) != NULL) {
-			cerr << "Error: Cannot open file 'settings.txt'\n";
+#ifdef _WIN32
+	char* buf = nullptr;
+	size_t size = 0;
+
+	if (_dupenv_s(&buf, &size, "LOCALAPPDATA") == 0 && buf != nullptr) {
+		sprintf_s(path, "%s\\CR24", buf);
+		_mkdir(path);
+
+		sprintf_s(path, "%s\\CR24\\Minesweeper", buf);
+		_mkdir(path);
+
+		sprintf_s(path, "%s\\CR24\\Minesweeper\\settings.txt", buf);
+		free(buf);
+	}
+	else {
+		sprintf_s(path, "settings.txt");
+	}
+#else
+	const char* home = std::getenv("HOME");
+
+	if (home) {
+		sprintf_s(path, "%s/.config", home);
+		mkdir(path, 0755);
+
+		sprintf_s(path, "%s/.config/Minesweeper", home);
+		mkdir(path, 0755);
+
+		sprintf_s(path, "%s/.config/Minesweeper/settings.txt", home);
+	}
+	else {
+		sprintf_s(path, "settings.txt");
+	}
+#endif
+
+	// Default values when starting the program for the first time
+	if (fopen_s(&settings, path, "r") != 0) {
+		cout << "Settings file doesn't exist, setting everything to default.\n";
+
+		if (fopen_s(&settings, path, "w") != 0) {
+			cerr << "Error: Cannot open settings file\n";
 			return;
 		}
 
 		// Write default values to settings.txt
-		fprintf_s(settings, "ShowKeybinds=%d\nFlowerIcon=%d\nCellsCountStyle=%d\nTimePlayed=%d",
+		fprintf_s(settings,
+			"ShowKeybinds=%d\n"
+			"FlowerIcon=%d\n"
+			"CellsCountStyle=%d\n"
+			"TimePlayed=%d",
 			setting_showKeybinds,
 			setting_flower_icon,
 			setting_cells_style,
 			time_played
 		);
+
+		fclose(settings);
 	}
-	fclose(settings);
+	else
+	{
+		fclose(settings);
+	}
 
 	// Read settings.txt
-	if ((fopen_s(&settings, "settings.txt", "r")) != NULL) {
-		cerr << "Error: Cannot open file 'settings.txt'";
+	if (fopen_s(&settings, path, "r") != 0) {
+		cerr << "Error: Cannot open settings file\n";
 		return;
 	}
 
 	int tmp_bool = 0;
-	fscanf_s(settings, "ShowKeybinds=%d\nFlowerIcon=%d\nCellsCountStyle=%d\nTimePlayed=%d",
+
+	fscanf_s(settings,
+		"ShowKeybinds=%d\n"
+		"FlowerIcon=%d\n"
+		"CellsCountStyle=%d\n"
+		"TimePlayed=%d",
 		&tmp_bool,
 		&setting_flower_icon,
 		&setting_cells_style,
 		&time_played
 	);
+
 	setting_showKeybinds = (tmp_bool != 0);
+
 	fclose(settings);
 }
 
