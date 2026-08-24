@@ -32,4 +32,4 @@ cl minesweeper.cpp /EHsc
 ```
 
 ## Download
-You can download the precompiled binary from the [releases](https://github.com/blurrycmd/minesweeper/releases).
+You can download the precompiled portable binary or installer from the latest [release](https://github.com/ItsCR24/minesweeper/releases/latest).
