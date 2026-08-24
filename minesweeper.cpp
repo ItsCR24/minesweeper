@@ -479,7 +479,7 @@ void menu(int screen, int& cells_x, int& cells_y, int& mines) {
 		cout << "You can check out the source code of this game here:";
 		cout << "\n";
 		cout << "\033[" << ((window_x / 2) - 20) << "G";
-		cout << "https://github.com/blurrycmd/minesweeper";
+		cout << "https://github.com/ItsCR24/minesweeper";
 		cout << "\n\n";
 
 		cout << "\033[" << ((window_x / 2) - 9) << "G";
