@@ -4,7 +4,7 @@
 // Minesweeper
 // A simple minesweeper game with a beautiful tui written in C++
 // Author: CR24
-// Version: 1.5.0
+// Version: 1.6.0
 
 // THIS PROGRAM ONLY HAS SUPPORT FOR WINDOWS MACHINES, SORRY
 
